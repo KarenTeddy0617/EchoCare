@@ -1,0 +1,273 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "704ebc7b-d2fc-4e2d-adca-8b624ca5f6f5",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "fromEmail": "karenteddy2006@gmail.com",
+        "toEmail": "={{$json.Email}}",
+        "subject": " EchoCare Daily Check-In🫶",
+        "html": "=Hey {{$json.Name}}! 💬<br><br>\n{{ $json.output }} <br><br>\nIt's time for your daily check-in with <strong>EchoCare</strong> 🧠<br><br>\n\nHow are you feeling today?<br><br>\n\n👉 <a href=\"http://localhost:8501\">Click here to log your mood</a><br><br>\n\nRemember: your feelings matter, and we’re here for you 💚<br><br>\n\n– Team EchoCare 🌿\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1260,
+        0
+      ],
+      "id": "76b1426c-e0fd-43cc-ab8b-c54ea1592507",
+      "name": "Send Email",
+      "webhookId": "4f5c1bd5-ffb8-4e64-a7f6-19c6909d1e13",
+      "credentials": {
+        "smtp": {
+          "id": "3fxtF0P35lYpdlyE",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Cg1h-MMWjb8nzzrIirmWffocgr5q49CMVQ2SEPexDRM",
+          "mode": "list",
+          "cachedResultName": "UserCheckins",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Cg1h-MMWjb8nzzrIirmWffocgr5q49CMVQ2SEPexDRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Cg1h-MMWjb8nzzrIirmWffocgr5q49CMVQ2SEPexDRM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        240,
+        0
+      ],
+      "id": "961edff9-f57c-4f84-83ec-becf0dac8dfe",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cX2rWs20UNJKkFBK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a supportive mental health assistant.\nThe user's name is {{ $json.Name }}.\nGenerate a 1-line supportive message for {{ $json.Name }} to motivate them today.\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "be12cd17-62dc-4e4c-a8f5-258e8655debb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "mindcraft-gpt4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        720,
+        240
+      ],
+      "id": "157bf2a3-e547-4ae4-8d93-8a817837e08f",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "UxchK3xptI54nm7r",
+          "name": "Azure Open AI account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        0
+      ],
+      "id": "fde2326c-d011-4ce2-9b2d-9a7b8f4dbd8e",
+      "name": "Wait",
+      "webhookId": "cfe387c5-d309-4ee1-a748-469d34dc3d4b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ac346369-398a-448f-b743-69c662b1a36a",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "8606ebcd-4f32-4aae-8f64-f92896258fdf",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        280
+      ],
+      "id": "4a5e7c89-3c33-4636-8ccf-2309edcc6194",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        740,
+        -260
+      ],
+      "id": "94053fd7-6d42-4c6c-ab60-964ba792cb92",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "013b19e6-696a-42ea-ab88-dbea4019f10c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "17fb75603a8b28130bcad8fb9fd271381092dd99162f849b26f32060963cf83b"
+  },
+  "id": "kaXAM38F4P0VFM8I",
+  "tags": []
+}
